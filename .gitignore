@@ -10,3 +10,7 @@ gradle-app.setting
 .idea
 
 *.iml
+
+# Scala
+target/
+project/
