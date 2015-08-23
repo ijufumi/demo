@@ -87,6 +87,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
         resource.setScope(scopes);
         resource.setAccessTokenUri("https://www.googleapis.com/oauth2/v3/token");
         resource.setClientAuthenticationScheme(AuthenticationScheme.form);
+        resource.setAuthenticationScheme(AuthenticationScheme.form);
         resource.setUserAuthorizationUri("https://accounts.google.com/o/oauth2/auth");
         resource.setPreEstablishedRedirectUri("http://localhost:8080/oauth2");
         resource.setGrantType("authorization_code");
