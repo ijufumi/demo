@@ -1,0 +1,42 @@
+<configuration>
+    <!-- common settings -->
+    <property name="ROOT_LEVEL" value="DEBUG" />
+    <property name="LOG_FILE_BASE" value="application" />
+    <property name="NORMAL_LOG_FILE" value="${catalina.home}/logs/${LOG_FILE_BASE}.log" />
+    <property name="NORMAL_LOG_FILE_BACKUP" value="${catalina.home}/logs/${NORMAL_LOG_FILE}-%d{yyyyMMdd}" />
+    <property name="ERROR_LOG_FILE" value="${catalina.home}/logs/${LOG_FILE_BASE}_error.log" />
+    <property name="ERROR_LOG_FILE_BACKUP" value="${catalina.home}/logs/${ERROR_LOG_FILE}.log-%d{yyyyMMdd}" />
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+        <encoder>
+            <pattern>[%d{yyyy-MMM-dd HH:mm:ss.SSS}] [%-5level] [%thread] [%logger{1} \(%M:%line\)] - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="NORMAL" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <append>true</append>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+        <file>${NORMAL_LOG_FILE}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${NORMAL_LOG_FILE_BACKUP}</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>[%d{yyyy-MMM-dd HH:mm:ss.SSS}] [%-5level] [%thread] [%logger{1} \(%M:%line\)] - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ASYNC_NORMAL" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="STDOUT"/>
+        <includeCallerData>true</includeCallerData>
+    </appender>
+
+    <root level="${ROOT_LEVEL}">
+        <appender-ref ref="ASYNC_NORMAL"/>
+    </root>
+</configuration>
