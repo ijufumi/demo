@@ -5,6 +5,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -20,6 +22,9 @@ import org.springframework.security.oauth2.client.token.grant.code.Authorization
 import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
 import org.springframework.security.oauth2.common.AuthenticationScheme;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
+import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
+import org.springframework.security.oauth2.provider.token.RemoteTokenServices;
+import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 import org.springframework.security.web.access.ExceptionTranslationFilter;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
@@ -60,6 +65,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
         OAuth2ClientAuthenticationProcessingFilter filter = new OAuth2ClientAuthenticationProcessingFilter("/oauth2");
         filter.setRestTemplate(restTemplate());
 
+        //RemoteTokenServices tokenServices = new RemoteTokenServices();
+        DefaultTokenServices tokenServices = new DefaultTokenServices();
+        tokenServices.setTokenStore(new InMemoryTokenStore());
+        //tokenServices.setClientId("262385307653-o2f7kip090i6a4n8678n2po3j04d8atb.apps.googleusercontent.com");
+        //tokenServices.setClientSecret("C2NnWo6XSqYRhc9s3Jja93Bx");
+        //tokenServices.setRestTemplate(restTemplate());
+        //tokenServices.setCheckTokenEndpointUrl("https://www.googleapis.com/oauth2/v3/token");
+
+        filter.setTokenServices(tokenServices);
+
         return filter;
     }
 
@@ -99,6 +114,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     @Bean
     public AccessTokenProvider accessTokenProvider() {
         AuthorizationCodeAccessTokenProvider accessTokenProvider = new AuthorizationCodeAccessTokenProvider();
+        List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
+        messageConverters.add(new MappingJackson2HttpMessageConverter());
+        accessTokenProvider.setMessageConverters(messageConverters);
 
         return accessTokenProvider;
     }
