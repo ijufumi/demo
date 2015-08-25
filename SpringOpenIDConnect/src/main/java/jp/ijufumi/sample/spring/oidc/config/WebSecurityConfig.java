@@ -1,9 +1,15 @@
 package jp.ijufumi.sample.spring.oidc.config;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.SerializationConfig;
 import org.mitre.jose.keystore.JWKSetKeyStore;
 import org.mitre.jwt.signer.service.JWTSigningAndValidationService;
 import org.mitre.jwt.signer.service.impl.DefaultJWTSigningAndValidationService;
@@ -14,9 +20,10 @@ import org.mitre.openid.connect.client.service.ClientConfigurationService;
 import org.mitre.openid.connect.client.service.IssuerService;
 import org.mitre.openid.connect.client.service.RegisteredClientService;
 import org.mitre.openid.connect.client.service.ServerConfigurationService;
-import org.mitre.openid.connect.client.service.impl.DynamicRegistrationClientConfigurationService;
-import org.mitre.openid.connect.client.service.impl.DynamicServerConfigurationService;
-import org.mitre.openid.connect.client.service.impl.StaticSingleIssuerService;
+import org.mitre.openid.connect.client.service.impl.*;
+import org.mitre.openid.connect.config.ServerConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.UrlResource;
@@ -29,6 +36,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.authentication.AuthenticationManagerFactoryBean;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.Filter;
 
 @Configuration
@@ -81,6 +89,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         filter.setIssuerService(issuerService());
         filter.setFilterProcessesUrl("/login/google");
         filter.setAuthenticationManager(authenticationManager());
+        filter.setAuthRequestUrlBuilder(new PlainAuthRequestUrlBuilder());
+        // TODO SuccessHandlerを設定する。
 
         return filter;
     }
@@ -97,7 +107,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public ClientConfigurationService clientConfigurationService()
     {
-        DynamicRegistrationClientConfigurationService configurationService = new DynamicRegistrationClientConfigurationService();
+        RegisteredClient client = new RegisteredClient();
+        client.setClientId("262385307653-o2f7kip090i6a4n8678n2po3j04d8atb.apps.googleusercontent.com");
+        client.setClientSecret("C2NnWo6XSqYRhc9s3Jja93Bx");
+        client.setScope(new HashSet<>(Arrays.asList("openid", "email", "profile")));
+        client.setRedirectUris(new HashSet<>(Arrays.asList("http://localhost:8080/login/google")));
+        client.setGrantTypes(new HashSet<>(Arrays.asList("code")));
+
+        StaticClientConfigurationService configurationService = new StaticClientConfigurationService();
+        configurationService.setClients(Collections.singletonMap(ISSUER, client));
 
         return configurationService;
     }
