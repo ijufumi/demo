@@ -1,12 +1,14 @@
 package jp.ijufumi.sample.spring.oidc.config.initializer;
 
 import jp.ijufumi.sample.spring.oidc.config.ApplicationConfig;
+import org.springframework.core.annotation.Order;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import javax.servlet.Filter;
 
+@Order(1)
 public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
     @Override
     protected Class<?>[] getRootConfigClasses() {
