@@ -1,0 +1,12 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>index</title>
+</head>
+<body>
+  <h1 th:text="'Hello, World.'"></h1>
+  <h2 th:if="${name != null}" th:text="${name}"></h2>
+  <h2 th:if="${email != null}" th:text="${email}"></h2>
+  <br>
+  <h1 th:text="'Thymeleaf version.3'"></h1>
+</body>
+</html>
