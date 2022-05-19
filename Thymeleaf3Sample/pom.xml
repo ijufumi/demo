@@ -11,7 +11,7 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <spring.version>5.2.21.RELEASE</spring.version>
+        <spring.version>5.2.22.RELEASE</spring.version>
         <thymeleaf.version>3.0.0.BETA02</thymeleaf.version>
     </properties>
 
