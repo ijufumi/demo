@@ -10,7 +10,7 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <spring.version>5.2.22.RELEASE</spring.version>
+        <spring.version>6.0.0</spring.version>
         <spring.data-redis.version>1.6.0.RELEASE</spring.data-redis.version>
 
         <logback.version>1.2.9</logback.version>
@@ -119,12 +119,21 @@
             <version>${jackson.version}</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api -->
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>6.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>3.1.0</version>
             <scope>provided</scope>
         </dependency>
+
     </dependencies>
 
     <build>
