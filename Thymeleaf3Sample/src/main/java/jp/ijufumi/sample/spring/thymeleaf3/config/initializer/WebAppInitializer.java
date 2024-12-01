@@ -1,6 +1,6 @@
 package jp.ijufumi.sample.spring.thymeleaf3.config.initializer;
 
-import javax.servlet.Filter;
+import jakarta.servlet.Filter;
 
 import jp.ijufumi.sample.spring.thymeleaf3.config.ApplicationConfig;
 import org.springframework.core.annotation.Order;

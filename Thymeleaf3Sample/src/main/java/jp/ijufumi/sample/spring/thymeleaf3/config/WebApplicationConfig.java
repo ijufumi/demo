@@ -1,10 +1,9 @@
 package jp.ijufumi.sample.spring.thymeleaf3.config;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,16 +13,16 @@ import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.thymeleaf.spring4.SpringTemplateEngine;
-import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
-import org.thymeleaf.spring4.view.ThymeleafViewResolver;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
+import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templateresolver.ITemplateResolver;
-import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
+
 
 @Configuration
 @EnableWebMvc
-public class WebApplicationConfig extends WebMvcConfigurerAdapter implements ServletContextAware {
+public class WebApplicationConfig implements ServletContextAware, WebMvcConfigurer {
     @Autowired
     MessageSource messageSource;
 
@@ -41,27 +40,17 @@ public class WebApplicationConfig extends WebMvcConfigurerAdapter implements Ser
     }
 
     @Bean
-    public ServletContextTemplateResolver templateResolver() {
-        ServletContextTemplateResolver resolver = new ServletContextTemplateResolver(servletContext);
+    public ITemplateResolver templateResolver() {
+        SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
+        resolver.setApplicationContext(applicationContext);
         resolver.setPrefix("/views/");
-        resolver.setSuffix(".html");
-        resolver.setTemplateMode("HTML5");
+        resolver.setTemplateMode("HTML");
         resolver.setCacheable(false);
         resolver.setCharacterEncoding("UTF-8");
+        resolver.setSuffix(".html");
+
         return resolver;
     }
-
-//    private ITemplateResolver templateResolver() {
-//        SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
-//        resolver.setApplicationContext(applicationContext);
-//        resolver.setPrefix("/views/");
-//        resolver.setTemplateMode("HTML");
-//        resolver.setCacheable(false);
-//        resolver.setCharacterEncoding("UTF-8");
-//        resolver.setSuffix(".html");
-//
-//        return resolver;
-//    }
 
     @Bean
     public SpringTemplateEngine templateEngine() {
